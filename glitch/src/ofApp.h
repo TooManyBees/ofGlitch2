@@ -1,6 +1,8 @@
 #pragma once
 
 #include "ofMain.h"
+#include "openni.h"
+#include "OniManager.h"
 
 class ofApp : public ofBaseApp{
 
@@ -20,5 +22,19 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-		
+
+		int WIDTH = 640;
+		int HEIGHT = 480;
+		int FPS = 30;
+
+	private:
+		OniManager oni_manager;
+
+		ofImage colorFrame;
+		ofImage depthFrame;
+		ofImage userFrame;
+		ofImage glitchBuffer;
+
+		ofShader beglitch;
+		ofShader usermask;
 };
