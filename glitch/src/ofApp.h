@@ -30,6 +30,8 @@ class ofApp : public ofBaseApp{
 	private:
 		OniManager oni_manager;
 
+		ofRectangle canvasSpace;
+
 		ofImage colorFrame;
 		ofImage depthFrame;
 		ofImage userFrame;
@@ -37,4 +39,8 @@ class ofApp : public ofBaseApp{
 
 		ofShader beglitch;
 		ofShader usermask;
+
+		bool needsResize;
+		void sizeCanvasSpace();
+
 };

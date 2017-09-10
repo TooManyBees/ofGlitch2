@@ -24,6 +24,9 @@ void ofApp::setup(){
 
 	usermask.load("identity.vert", "usermask.frag");
 	beglitch.load("identity.vert", "beglitch.frag");
+
+	//ofSetFullscreen(true);
+	needsResize = true;
 }
 
 unsigned char mysteryDiff(unsigned char a, unsigned char b) {
@@ -55,24 +58,30 @@ void ofApp::update(){
 	}
 	glitchBuffer.update();
 	oni_manager.getUserFrame(&userFrame);
+
+	if (needsResize) {
+		sizeCanvasSpace();
+	}
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	userFrame.draw(0, 0);
+	ofBackground(0);
 
+	// Draw the color frame, optionally masked and thresholded
 	usermask.begin();
 	usermask.setUniformTexture("usermask", userFrame.getTextureReference(), 1);
 	usermask.setUniform1f("threshold", 0.35);
-	colorFrame.draw(0, 0);
+	colorFrame.draw(canvasSpace);
 	usermask.end();
 
+	// Draw the glitch!
 	beglitch.begin();
 	beglitch.setUniform1f("threshold", 0.6);
 	ofFloatColor color;
 	color.setHsb(ofRandom(1.0), 1.0, 1.0);
 	beglitch.setUniform3f("color", color.r, color.g, color.b);
-	glitchBuffer.draw(0, 0);
+	glitchBuffer.draw(canvasSpace);
 	beglitch.end();
 }
 
@@ -118,7 +127,7 @@ void ofApp::mouseExited(int x, int y){
 
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h){
-
+	needsResize = true;
 }
 
 //--------------------------------------------------------------
@@ -129,4 +138,30 @@ void ofApp::gotMessage(ofMessage msg){
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
+}
+
+void ofApp::sizeCanvasSpace() {
+	// Figure out where to draw the image on screen
+	float scaleWidthRatio = (float)ofGetWidth() / (float)WIDTH;
+	float scaleHeightRatio = (float)ofGetHeight() / (float)HEIGHT;
+	float posX, posY, scaleHeight, scaleWidth;
+	if (HEIGHT * scaleWidthRatio <= ofGetHeight()) {
+		// if scaling to max still fits the height
+		scaleWidth = ofGetWidth();
+		scaleHeight = HEIGHT * scaleWidthRatio;
+		posX = 0;
+		posY = (ofGetHeight() - scaleHeight) / 2;
+	}
+	else {
+		scaleWidth = WIDTH * scaleHeightRatio;
+		scaleHeight = ofGetHeight();
+		posX = (ofGetWidth() - scaleWidth) / 2;
+		posY = 0;
+	}
+	canvasSpace.x = posX;
+	canvasSpace.y = posY;
+	canvasSpace.width = scaleWidth;
+	canvasSpace.height = scaleHeight;
+	printf("Drawing at (%.2f, %.2f): %.2f x %.2f\n", canvasSpace.x, canvasSpace.y, canvasSpace.width, canvasSpace.height);
+	needsResize = false;
 }
