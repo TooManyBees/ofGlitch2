@@ -3,6 +3,7 @@
 #include "ofMain.h"
 #include "openni.h"
 #include "OniManager.h"
+#include "toggle.h"
 
 class ofApp : public ofBaseApp{
 
@@ -43,4 +44,10 @@ class ofApp : public ofBaseApp{
 		bool needsResize;
 		void sizeCanvasSpace();
 
+		bool displayUi = false;
+		Toggle toggleBuffer = Toggle("B", 'b', "draw buffer", ofPoint(10, 10));
+		Toggle toggleVideo = Toggle("V", 'v', "draw video", ofPoint(10, 35), true);
+		Toggle toggleThreshold = Toggle("T", 't', "threshold video", ofPoint(10, 60), true);
+		Toggle toggleRainbows = Toggle("R", 'r', "rainbows", ofPoint(10, 85), true);
+		vector<Toggle*> ui;
 };

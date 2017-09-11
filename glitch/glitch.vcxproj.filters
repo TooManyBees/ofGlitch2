@@ -10,6 +10,9 @@
     <ClCompile Include="src\OniManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\toggle.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -24,6 +27,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\OniManager.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\toggle.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

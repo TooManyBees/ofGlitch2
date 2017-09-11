@@ -25,6 +25,11 @@ void ofApp::setup(){
 	usermask.load("identity.vert", "usermask.frag");
 	beglitch.load("identity.vert", "beglitch.frag");
 
+	ui.push_back(&toggleBuffer);
+	ui.push_back(&toggleVideo);
+	ui.push_back(&toggleThreshold);
+	ui.push_back(&toggleRainbows);
+
 	//ofSetFullscreen(true);
 	needsResize = true;
 }
@@ -66,28 +71,56 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+	if (toggleBuffer.isOn()) {
+		ofSetColor(255);
+		glitchBuffer.draw(canvasSpace);
+		return;
+	}
+
 	ofBackground(0);
 
-	// Draw the color frame, optionally masked and thresholded
-	usermask.begin();
-	usermask.setUniformTexture("usermask", userFrame.getTextureReference(), 1);
-	usermask.setUniform1f("threshold", 0.35);
-	colorFrame.draw(canvasSpace);
-	usermask.end();
+	if (toggleVideo.isOn()) {
+		// Draw the color frame, optionally masked and thresholded
+		if (toggleThreshold.isOn()) {
+			usermask.begin();
+			usermask.setUniformTexture("usermask", userFrame.getTextureReference(), 1);
+			usermask.setUniform1f("threshold", 0.35);
+		}
+		colorFrame.draw(canvasSpace);
+		if (toggleThreshold.isOn()) usermask.end();
+	}
 
 	// Draw the glitch!
-	beglitch.begin();
-	beglitch.setUniform1f("threshold", 0.6);
-	ofFloatColor color;
-	color.setHsb(ofRandom(1.0), 1.0, 1.0);
-	beglitch.setUniform3f("color", color.r, color.g, color.b);
-	glitchBuffer.draw(canvasSpace);
-	beglitch.end();
+	if (toggleRainbows.isOn()) {
+		beglitch.begin();
+		beglitch.setUniform1f("threshold", 0.6);
+		ofFloatColor color;
+		color.setHsb(ofRandom(1.0), 1.0, 1.0);
+		beglitch.setUniform3f("color", color.r, color.g, color.b);
+		glitchBuffer.draw(canvasSpace);
+		beglitch.end();
+	}
+
+	if (displayUi) {
+		for (Toggle* elem : ui) {
+			elem->draw();
+		}
+	}
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+	if (key == 'u') {
+		displayUi = !displayUi;
+	}
+	else {
+		for (Toggle* elem : ui) {
+			if (elem->wasPressed(key)) {
+				elem->click();
+				return;
+			}
+		}
+	}
 }
 
 //--------------------------------------------------------------
@@ -107,7 +140,12 @@ void ofApp::mouseDragged(int x, int y, int button){
 
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
-
+	for (Toggle* elem : ui) {
+		if (elem->wasClicked(x, y)) {
+			elem->click();
+			return;
+		}
+	}
 }
 
 //--------------------------------------------------------------
