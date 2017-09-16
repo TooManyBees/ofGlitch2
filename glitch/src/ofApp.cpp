@@ -9,8 +9,7 @@ void ofApp::setup(){
 	}
 	else {
 		printf("Error: %s\n", openni::OpenNI::getExtendedError());
-		exit();
-		return;
+		return std::exit(1);
 	}
 	colorFrame.allocate(WIDTH, HEIGHT, OF_IMAGE_COLOR);
 	depthFrame.allocate(WIDTH, HEIGHT, OF_IMAGE_GRAYSCALE);
