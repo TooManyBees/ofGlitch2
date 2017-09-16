@@ -45,9 +45,14 @@ class ofApp : public ofBaseApp{
 		void sizeCanvasSpace();
 
 		bool displayUi = false;
-		Toggle toggleBuffer = Toggle("B", 'b', "draw buffer", ofPoint(10, 10));
-		Toggle toggleVideo = Toggle("V", 'v', "draw video", ofPoint(10, 35), true);
-		Toggle toggleThreshold = Toggle("T", 't', "threshold video", ofPoint(10, 60), true);
-		Toggle toggleRainbows = Toggle("R", 'r', "rainbows", ofPoint(10, 85), true);
+		ofTrueTypeFont uiFont;
+		ofTrueTypeFont statsFont;
+		char statsString[30];
+		float videoThreshold;
+		float rainbowThreshold;
+		Toggle* toggleBuffer;
+		Toggle* toggleVideo;
+		Toggle* toggleThreshold;
+		Toggle* toggleRainbows;
 		vector<Toggle*> ui;
 };

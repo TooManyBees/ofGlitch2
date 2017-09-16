@@ -24,12 +24,22 @@ void ofApp::setup(){
 	usermask.load("identity.vert", "usermask.frag");
 	beglitch.load("identity.vert", "beglitch.frag");
 
-	ui.push_back(&toggleBuffer);
-	ui.push_back(&toggleVideo);
-	ui.push_back(&toggleThreshold);
-	ui.push_back(&toggleRainbows);
+	uiFont.load("Anonymous Pro B", 18);
+	statsFont.load("Anonymous Pro", 12);
+
+	toggleBuffer = new Toggle("B", 'b', "draw buffer", ofPoint(10, 10), &uiFont);
+	toggleVideo = new Toggle("V", 'v', "draw video", ofPoint(10, 35), &uiFont, true);
+	toggleThreshold = new Toggle("T", 't', "threshold video", ofPoint(10, 60), &uiFont, true);
+	toggleRainbows = new Toggle("R", 'r', "rainbows", ofPoint(10, 85), &uiFont, true);
+
+	ui.push_back(toggleBuffer);
+	ui.push_back(toggleVideo);
+	ui.push_back(toggleThreshold);
+	ui.push_back(toggleRainbows);
 
 	//ofSetFullscreen(true);
+	videoThreshold = 0.35;
+	rainbowThreshold = 0.6;
 	needsResize = true;
 }
 
@@ -70,7 +80,7 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	if (toggleBuffer.isOn()) {
+	if (toggleBuffer->isOn()) {
 		ofSetColor(255);
 		glitchBuffer.draw(canvasSpace);
 		return;
@@ -78,21 +88,21 @@ void ofApp::draw(){
 
 	ofBackground(0);
 
-	if (toggleVideo.isOn()) {
+	if (toggleVideo->isOn()) {
 		// Draw the color frame, optionally masked and thresholded
-		if (toggleThreshold.isOn()) {
+		if (toggleThreshold->isOn()) {
 			usermask.begin();
 			usermask.setUniformTexture("usermask", userFrame.getTextureReference(), 1);
-			usermask.setUniform1f("threshold", 0.35);
+			usermask.setUniform1f("threshold", videoThreshold);
 		}
 		colorFrame.draw(canvasSpace);
-		if (toggleThreshold.isOn()) usermask.end();
+		if (toggleThreshold->isOn()) usermask.end();
 	}
 
 	// Draw the glitch!
-	if (toggleRainbows.isOn()) {
+	if (toggleRainbows->isOn()) {
 		beglitch.begin();
-		beglitch.setUniform1f("threshold", 0.6);
+		beglitch.setUniform1f("threshold", rainbowThreshold);
 		ofFloatColor color;
 		color.setHsb(ofRandom(1.0), 1.0, 1.0);
 		beglitch.setUniform3f("color", color.r, color.g, color.b);
@@ -104,15 +114,36 @@ void ofApp::draw(){
 		for (Toggle* elem : ui) {
 			elem->draw();
 		}
+		ofSetColor(255);
+		sprintf(statsString, "Rainbows: %.2f\nFaces: %.2f", rainbowThreshold, videoThreshold);
+		if (statsFont.isLoaded()) {
+			statsFont.drawString(statsString, 5.0, ofGetHeight() - statsFont.stringHeight(statsString));
+		}
+		else {
+			ofDrawBitmapString(statsString, 5.0, ofGetHeight() - 32);
+		}
 	}
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-	if (key == 'u') {
+	switch (key) {
+	case 'u':
 		displayUi = !displayUi;
-	}
-	else {
+		break;
+	case OF_KEY_UP:
+		rainbowThreshold = max(0.0, rainbowThreshold - 0.05);
+		break;
+	case OF_KEY_DOWN:
+		rainbowThreshold = min(1.0, rainbowThreshold + 0.05);
+		break;
+	case OF_KEY_LEFT:
+		videoThreshold = min(1.0, (roundf(videoThreshold * 40.0) + 1.0) / 40.0);
+		break;
+	case OF_KEY_RIGHT:
+		videoThreshold = max(0.0, (roundf(videoThreshold * 40.0) - 1.0) / 40.0);
+		break;
+	default:
 		for (Toggle* elem : ui) {
 			if (elem->wasPressed(key)) {
 				elem->click();

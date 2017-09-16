@@ -1,9 +1,5 @@
 #include "toggle.h"
 
-//Toggle &Toggle::operator=(const Toggle&) {
-//
-//}
-
 void Toggle::enableThisFrame(bool e) {
 	enabled = e;
 }
@@ -45,5 +41,10 @@ void Toggle::draw() {
 	path.setFillColor(bg);
 	path.draw();
 	ofSetColor(fg);
-	ofDrawBitmapString(label, rect.getBottomLeft());
+	if (font->isLoaded()) {
+		font->drawString(label, fontPos.x, fontPos.y);
+	}
+	else {
+		ofDrawBitmapString(label, fontPos.x, fontPos.y);
+	}
 }
