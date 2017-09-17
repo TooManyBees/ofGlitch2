@@ -55,4 +55,7 @@ class ofApp : public ofBaseApp{
 		Toggle* toggleThreshold;
 		Toggle* toggleRainbows;
 		vector<Toggle*> ui;
+
+		void updateUi();
+		void drawUi();
 };

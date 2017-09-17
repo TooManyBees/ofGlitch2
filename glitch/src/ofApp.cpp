@@ -77,9 +77,9 @@ void ofApp::update(){
 	glitchBuffer.update();
 	oni_manager.getUserFrame(&userFrame);
 
-	if (needsResize) {
-		sizeCanvasSpace();
-	}
+	updateUi();
+
+	if (needsResize) sizeCanvasSpace();
 }
 
 //--------------------------------------------------------------
@@ -87,6 +87,7 @@ void ofApp::draw(){
 	if (toggleBuffer->isOn()) {
 		ofSetColor(255);
 		glitchBuffer.draw(canvasSpace);
+		if (displayUi) drawUi();
 		return;
 	}
 
@@ -114,14 +115,22 @@ void ofApp::draw(){
 		beglitch.end();
 	}
 
-	if (displayUi) {
-		for (Toggle* elem : ui) {
-			elem->draw();
-		}
-		ofSetColor(255);
-		sprintf(statsString, "Rainbows: %.2f\nFaces: %.2f", rainbowThreshold, videoThreshold);
-		statsFont.drawString(statsString, 5.0, ofGetHeight() - statsFont.stringHeight(statsString));
+	if (displayUi) drawUi();
+}
+
+void ofApp::updateUi() {
+	toggleVideo->enableThisFrame(!toggleBuffer->isOn());
+	toggleThreshold->enableThisFrame(toggleVideo->isOn());
+	toggleRainbows->enableThisFrame(!toggleBuffer->isOn());
+}
+
+void ofApp::drawUi() {
+	for (Toggle* elem : ui) {
+		elem->draw();
 	}
+	ofSetColor(255);
+	sprintf(statsString, "Rainbows: %.2f\nFaces: %.2f", rainbowThreshold, videoThreshold);
+	statsFont.drawString(statsString, 5.0, ofGetHeight() - statsFont.stringHeight(statsString));
 }
 
 //--------------------------------------------------------------
