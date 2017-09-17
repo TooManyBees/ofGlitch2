@@ -7,14 +7,8 @@ public:
 	{
 		label.assign(l);
 		description.assign(d);
-		path.lineTo(rect.getTopLeft());
-		path.lineTo(rect.getTopRight());
-		path.lineTo(rect.getBottomRight());
-		path.lineTo(rect.getBottomLeft());
-		path.close();
 
 		float w = font->stringWidth(label);
-		float h = font->stringHeight(label);
 		fontPos = ofPoint(
 			rect.getCenter().x - w / 2.0,
 			rect.getBottom() - 2.0
@@ -35,7 +29,6 @@ private:
 	char hotkey;
 	std::string description;
 	ofRectangle rect;
-	ofPath path;
 	ofTrueTypeFont* font;
 	ofPoint fontPos;
 };

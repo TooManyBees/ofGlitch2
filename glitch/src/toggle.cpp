@@ -35,11 +35,8 @@ void Toggle::draw() {
 		bg = 0;
 		fg = 255;
 	}
-	//ofSetColor(bg);
-	//ofDrawRectangle(rect);
-	path.setColor(fg);
-	path.setFillColor(bg);
-	path.draw();
+	ofSetColor(bg);
+	ofDrawRectangle(rect);
 	ofSetColor(fg);
 	font->drawString(label, fontPos.x, fontPos.y);
 }
