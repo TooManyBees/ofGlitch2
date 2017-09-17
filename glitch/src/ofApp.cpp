@@ -68,7 +68,7 @@ void ofApp::update(){
 	oni_manager.getColorFrame(&colorFrame);
 	oni_manager.getDepthFrame(&depthFrame);
 
-	ofPixels & pGlitch = glitchBuffer.getPixelsRef();
+	ofPixels & pGlitch = glitchBuffer.getPixels();
 	const ofPixels pDepth = depthFrame.getPixels();
 	for (int i = 0; i < WIDTH * HEIGHT; i++) {
 		unsigned char dd = mysteryDiff(pGlitch[i], pDepth[i]);
@@ -96,7 +96,7 @@ void ofApp::draw(){
 		// Draw the color frame, optionally masked and thresholded
 		if (toggleThreshold->isOn()) {
 			usermask.begin();
-			usermask.setUniformTexture("usermask", userFrame.getTextureReference(), 1);
+			usermask.setUniformTexture("usermask", userFrame.getTexture(), 1);
 			usermask.setUniform1f("threshold", videoThreshold);
 		}
 		colorFrame.draw(canvasSpace);
