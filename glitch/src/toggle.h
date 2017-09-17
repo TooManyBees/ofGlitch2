@@ -13,14 +13,12 @@ public:
 		path.lineTo(rect.getBottomLeft());
 		path.close();
 
-		if (font->isLoaded()) {
-			float w = font->stringWidth(label);
-			float h = font->stringHeight(label);
-			fontPos = ofPoint(
-				rect.getCenter().x - w / 2.0,
-				rect.getBottom() - 2.0
-			);
-		}
+		float w = font->stringWidth(label);
+		float h = font->stringHeight(label);
+		fontPos = ofPoint(
+			rect.getCenter().x - w / 2.0,
+			rect.getBottom() - 2.0
+		);
 	}
 
 	void enableThisFrame(bool e);

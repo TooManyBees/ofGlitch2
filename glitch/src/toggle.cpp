@@ -41,10 +41,5 @@ void Toggle::draw() {
 	path.setFillColor(bg);
 	path.draw();
 	ofSetColor(fg);
-	if (font->isLoaded()) {
-		font->drawString(label, fontPos.x, fontPos.y);
-	}
-	else {
-		ofDrawBitmapString(label, fontPos.x, fontPos.y);
-	}
+	font->drawString(label, fontPos.x, fontPos.y);
 }

@@ -5,10 +5,10 @@ void ofApp::setup(){
 	ofSetFrameRate(FPS);
 	ofSetVerticalSync(true);
 	if (oni_manager.setup(WIDTH, HEIGHT, FPS)) {
-		printf("Setup device and streams.\n");
+		cout << "Setup device and streams.\n" << endl;
 	}
 	else {
-		printf("Error: %s\n", openni::OpenNI::getExtendedError());
+		cerr << openni::OpenNI::getExtendedError() << endl;
 		return std::exit(1);
 	}
 	colorFrame.allocate(WIDTH, HEIGHT, OF_IMAGE_COLOR);
@@ -24,8 +24,12 @@ void ofApp::setup(){
 	usermask.load("identity.vert", "usermask.frag");
 	beglitch.load("identity.vert", "beglitch.frag");
 
-	uiFont.load("Anonymous Pro B", 18);
-	statsFont.load("Anonymous Pro", 12);
+	uiFont.load("AnonymousProBold.ttf", 18) || uiFont.load(OF_TTF_MONO, 18);
+	statsFont.load("AnonymousPro.ttf", 12) || statsFont.load(OF_TTF_MONO, 12);
+	if (!uiFont.isLoaded() || !statsFont.isLoaded()) {
+		cerr << "Couldn't load fonts." << endl;
+		return std::exit(1);
+	}
 
 	toggleBuffer = new Toggle("B", 'b', "draw buffer", ofPoint(10, 10), &uiFont);
 	toggleVideo = new Toggle("V", 'v', "draw video", ofPoint(10, 35), &uiFont, true);
@@ -116,12 +120,7 @@ void ofApp::draw(){
 		}
 		ofSetColor(255);
 		sprintf(statsString, "Rainbows: %.2f\nFaces: %.2f", rainbowThreshold, videoThreshold);
-		if (statsFont.isLoaded()) {
-			statsFont.drawString(statsString, 5.0, ofGetHeight() - statsFont.stringHeight(statsString));
-		}
-		else {
-			ofDrawBitmapString(statsString, 5.0, ofGetHeight() - 32);
-		}
+		statsFont.drawString(statsString, 5.0, ofGetHeight() - statsFont.stringHeight(statsString));
 	}
 }
 
