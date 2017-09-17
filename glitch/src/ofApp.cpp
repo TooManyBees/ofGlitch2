@@ -132,16 +132,16 @@ void ofApp::keyPressed(int key){
 		displayUi = !displayUi;
 		break;
 	case OF_KEY_UP:
-		rainbowThreshold = max(0.0, rainbowThreshold - 0.05);
+		rainbowThreshold = ofClamp(rainbowThreshold - 0.05, 0.0, 1.0);
 		break;
 	case OF_KEY_DOWN:
-		rainbowThreshold = min(1.0, rainbowThreshold + 0.05);
+		rainbowThreshold = ofClamp(rainbowThreshold + 0.05, 0.0, 1.0);
 		break;
 	case OF_KEY_LEFT:
-		videoThreshold = min(1.0, (roundf(videoThreshold * 40.0) + 1.0) / 40.0);
+		videoThreshold = ofClamp(videoThreshold + 0.025, 0.0, 1.0);
 		break;
 	case OF_KEY_RIGHT:
-		videoThreshold = max(0.0, (roundf(videoThreshold * 40.0) - 1.0) / 40.0);
+		videoThreshold = ofClamp(videoThreshold - 0.025, 0.0, 1.0);
 		break;
 	default:
 		for (Toggle* elem : ui) {
