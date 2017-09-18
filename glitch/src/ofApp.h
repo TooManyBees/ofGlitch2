@@ -8,6 +8,7 @@
 class ofApp : public ofBaseApp{
 
 	public:
+		void parseArgs(int argc, char* argv[]);
 		void setup();
 		void update();
 		void draw();
@@ -29,6 +30,8 @@ class ofApp : public ofBaseApp{
 		int FPS = 30;
 
 	private:
+		bool mirror = true;
+		bool fullscreen = false;
 		OniManager oni_manager;
 
 		ofRectangle canvasSpace;

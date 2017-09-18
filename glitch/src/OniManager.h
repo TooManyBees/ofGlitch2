@@ -9,7 +9,7 @@
 class OniManager {
 public:
 	//~OniManager();
-	bool setup(int w, int h, int fps);
+	bool setup(int w, int h, int fps, bool mirror = true);
 
 	void getColorFrame(ofImage* image);
 	void getDepthFrame(ofImage* image);

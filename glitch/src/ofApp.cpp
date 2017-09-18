@@ -1,10 +1,35 @@
 #include "ofApp.h"
 
+void ofApp::parseArgs(int argc, char* argv[]) {
+	for (int i = 0; i < argc; i++) {
+		if (strcmp(argv[i], "--fullscreen") == 0) {
+			fullscreen = true;
+		}
+		else if (strcmp(argv[i], "--no-mirror") == 0) {
+			mirror = false;
+		}
+		else if (strcmp(argv[i], "--help") == 0 || strcmp(argv[i], "-h") == 0) {
+#ifdef WIN32
+			char* term = strrchr(argv[0], '\\');
+#else
+			char* term = strrchr(argv[0], '/');
+#endif
+			if (term == NULL) term = argv[0];
+			cout << "Usage: " << term+1 << " [options]" << endl;
+			cout << "Options:" << endl;
+			cout << "--help, -h\tPrint this message and exit." << endl;
+			cout << "--fullscreen\tStart application in full screen." << endl;
+			cout << "--no-mirror\tTurn off mirroring." << endl;
+			std::exit(0);
+		}
+	}
+}
+
 //--------------------------------------------------------------
 void ofApp::setup(){
 	ofSetFrameRate(FPS);
 	ofSetVerticalSync(true);
-	if (oni_manager.setup(WIDTH, HEIGHT, FPS)) {
+	if (oni_manager.setup(WIDTH, HEIGHT, FPS, mirror)) {
 		cout << "Setup device and streams.\n" << endl;
 	}
 	else {
@@ -41,7 +66,7 @@ void ofApp::setup(){
 	ui.push_back(toggleThreshold);
 	ui.push_back(toggleRainbows);
 
-	//ofSetFullscreen(true);
+	ofSetFullscreen(fullscreen);
 	videoThreshold = 0.35;
 	rainbowThreshold = 0.6;
 	needsResize = true;
@@ -138,6 +163,10 @@ void ofApp::keyPressed(int key){
 	switch (key) {
 	case 'u':
 		displayUi = !displayUi;
+		break;
+	case 'f':
+		fullscreen = !fullscreen;
+		ofSetFullscreen(fullscreen);
 		break;
 	case OF_KEY_UP:
 		rainbowThreshold = ofClamp(rainbowThreshold - 0.05, 0.0, 1.0);

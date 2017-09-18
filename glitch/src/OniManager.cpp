@@ -10,7 +10,7 @@
 //	openni::OpenNI::shutdown();
 //}
 
-bool OniManager::setup(int w, int h, int fps) {
+bool OniManager::setup(int w, int h, int fps, bool mirror) {
 	//colorFrameTimestamp = 0;
 	//userFrameTimestamp = 0;
 
@@ -24,6 +24,7 @@ bool OniManager::setup(int w, int h, int fps) {
 		vm.setFps(fps);
 		vm.setResolution(w, h);
 		if (depthStream.setVideoMode(vm) != ok) return false;
+		if (depthStream.setMirroringEnabled(mirror) != ok) return false;
 	}
 	else return false;
 
@@ -35,7 +36,7 @@ bool OniManager::setup(int w, int h, int fps) {
 		vm.setFps(fps);
 		vm.setResolution(w, h);
 		colorStream.setVideoMode(vm);
-
+		if (colorStream.setMirroringEnabled(mirror) != ok) return false;
 		if (colorStream.start() != ok) return false;
 	}
 	else return false;
